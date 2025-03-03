@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Team Service Shop</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #007bff; color: white; padding: 1rem; text-align: center; position: relative; }
+        #logout { position: absolute; top: 10px; right: 20px; background-color: red; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer; border-radius: 4px; }
+        #logout:hover { background-color: darkred; }
+        #shop { display: flex; justify-content: space-around; margin: 2rem; }
+        .service-card { background-color: white; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; width: 30%; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .service-card h2 { margin-bottom: 1rem; }
+        .service-card p { margin-bottom: 0.5rem; }
+        button { background-color: #007bff; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+        #cart { margin: 2rem; background-color: white; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; width: 50%; margin-left: auto; margin-right: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        #cart-items { list-style-type: none; padding: 0; }
+        #cart-items li { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Blue team1 Shop</h1>
+        <p>Purchase services to protect your infrastructure</p>
+        <button id="logout" onclick="logout()">Logout</button>
+    </header>
+
+    <section id="balance">
+        <p><strong>Your Balance:</strong> <span id="current-balance">500</span> BlueCoins</p>
+    </section>
+
+    <section id="shop">
+        <div class="service-card">
+            <h2>Snapshot</h2>
+            <p>Take a snapshot of the system to roll back anytime.</p>
+            <p><strong>Price:</strong> 50 BlueCoins</p>
+            <button onclick="addToCart('Snapshot', 50)">Add to Cart</button>
+        </div>
+        <div class="service-card">
+            <h2>Fix Specific Service</h2>
+            <p>Fix a critical service to keep your systems running smoothly.</p>
+            <p><strong>Price:</strong> 100 BlueCoins</p>
+            <button onclick="addToCart('Fix Service', 100)">Add to Cart</button>
+        </div>
+        <div class="service-card">
+            <h2>Prevent Red Team Activity</h2>
+            <p>Block Red Team activity for 15 minutes and secure your environment.</p>
+            <p><strong>Price:</strong> 200 BlueCoins</p>
+            <button onclick="addToCart('Prevent Red Team', 200)">Add to Cart</button>
+        </div>
+        <div class="service-card">
+            <h2>Hint from Red Team</h2>
+            <p>Get a crucial hint about Red Team's next move.</p>
+            <p><strong>Price:</strong> 150 BlueCoins</p>
+            <button onclick="addToCart('Hint from Red Team', 150)">Add to Cart</button>
+        </div>
+        <div class="service-card">
+            <h2>One-Time Full Credit for an Inject</h2>
+            <p>Get guaranteed full credit for one inject, no questions asked!</p>
+            <p><strong>Price:</strong> 500 BlueCoins</p>
+            <button onclick="addToCart('Full Credit Inject', 500)">Add to Cart</button>
+        </div>
+    </section>
+
+    <section id="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p><strong>Total:</strong> <span id="total-amount">0</span> BlueCoins</p>
+        <button onclick="checkout()">Checkout</button>
+        <button onclick="removeAllFromCart()">Remove All Items</button>
+    </section>
+
+    <script>
+        let cart = [];
+        let currentBalance = 500;
+
+        function addToCart(serviceName, price) {
+            cart.push({ name: serviceName, price: price });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsList = document.getElementById('cart-items');
+            const totalAmountElem = document.getElementById('total-amount');
+            const currentBalanceElem = document.getElementById('current-balance');
+            cartItemsList.innerHTML = '';
+            let totalAmount = 0;
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${item.name} - ${item.price} BlueCoins `;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = () => removeFromCart(index);
+                listItem.appendChild(removeButton);
+                cartItemsList.appendChild(listItem);
+                totalAmount += item.price;
+            });
+            totalAmountElem.textContent = totalAmount;
+            currentBalanceElem.textContent = currentBalance;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function removeAllFromCart() {
+            cart = [];
+            updateCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+            if (totalAmount > currentBalance) {
+                alert('Not enough BlueCoins!');
+            } else {
+                currentBalance -= totalAmount;
+                cart = [];
+                updateCart();
+                alert('Checkout successful!');
+            }
+        }
+
+        function logout() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
