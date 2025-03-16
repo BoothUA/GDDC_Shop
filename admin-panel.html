@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #007bff; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Transaction History</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Items Purchased</th>
+        <th>Total Cost</th>
+      </tr>
+    </thead>
+    <tbody id="transaction-table"></tbody>
+  </table>
+
+  <script>
+    function loadTransactions() {
+      // Get the stored transactions (or an empty array if none exist)
+      let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+      // Check if there's a 'transactionData' parameter in the URL.
+      const urlParams = new URLSearchParams(window.location.search);
+      const transactionDataParam = urlParams.get('transactionData');
+      if (transactionDataParam) {
+        try {
+          // Decode and parse the transaction data
+          const transaction = JSON.parse(decodeURIComponent(transactionDataParam));
+          // Optionally, check for duplicates before pushing (e.g., by comparing timestamps)
+          transactions.push(transaction);
+          localStorage.setItem('transactions', JSON.stringify(transactions));
+
+          // Remove the query parameter from the URL so it doesn't reprocess on refresh
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } catch (error) {
+          console.error('Error parsing transaction data:', error);
+        }
+      }
+
+      // Now update the transaction table
+      const transactionTable = document.getElementById('transaction-table');
+      transactionTable.innerHTML = '';
+      transactions.forEach(transaction => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${transaction.timestamp}</td>
+          <td>${transaction.items.map(item => item.name).join(', ')}</td>
+          <td>${transaction.total} BlueCoins</td>
+        `;
+        transactionTable.appendChild(row);
+      });
+    }
+
+    window.onload = loadTransactions;
+  </script>
+</body>
+</html>
