@@ -5,68 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Login</title>
     <style>
+        /* General Dark Mode Styles */
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #ffffff;
             margin: 0;
+            overflow: hidden;
+            flex-direction: column;
         }
 
+        /* Login Container */
         .login-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to right, #1e1e1e, #2a2a2a);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 1px 1px 20px white;
             text-align: center;
-            width: 300px;
+            width: 90%;
+            max-width: 350px;
+            border: 2px solid #444;
         }
 
+        /* Header */
         h2 {
-            margin-bottom: 20px;
+            font-family: "Verdana", sans-serif;
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 15px;
         }
 
+        /* Labels */
         label {
             display: block;
             text-align: left;
+            font-weight: bold;
             margin-top: 10px;
+            color: #ddd;
         }
 
+        /* Inputs */
         input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 2px solid #66a3ff;
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 1em;
+            background-color: #333;
+            color: white;
         }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+        /* Login Button */
+        button[type="submit"] {
+            width: 60%;
+            padding: 12px;
+            background: linear-gradient(to right, #28a745, #218838);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0px 0px 10px green;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        button:hover {
-            background-color: #218838;
+        button[type="submit"]:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 15px green;
         }
 
+        /* Error Message */
         .error-message {
             color: red;
             font-size: 0.9em;
             margin-top: 10px;
+            font-weight: bold;
         }
+
+        /* Logo */
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        /* Input Focus Effect */
+        input:focus {
+            border-color: blue;
+            box-shadow: 0px 0px 15px blue;
+            outline: none;
+        }
+
     </style>
 </head>
 <body>
     <div class="login-container">
+        <img src="cdo-logo.png" alt="CDO Logo" class="logo">
         <h2>Team Login</h2>
         <form id="loginForm">
             <label for="teamName">Team Name:</label>
@@ -82,31 +125,26 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("loginForm").addEventListener("submit", function(event) {
+            const loginForm = document.getElementById("loginForm");
+            const errorMessage = document.getElementById("error-message");
+
+            loginForm.addEventListener("submit", function(event) {
                 event.preventDefault();
 
                 const teamName = document.getElementById("teamName").value;
                 const password = document.getElementById("password").value;
-                const errorMessage = document.getElementById("error-message");
 
-                // Dummy credentials with associated redirects (replace with actual authentication logic)
+                // Dummy credentials with associated redirects
                 const validTeams = {
-                    "Team1": {
-                        password: "M3dic1neM@n",
-                        redirectUrl: "http://shop-team1.html"  // Redirect for Team1
-                    },
-                    "Team2": {
-                        password: "Pa7ientR0om",
-                        redirectUrl: "http://shop-team2.html"  // Redirect for Team2
-                    },
-                    "Team3": {
-                        password: "UAmed1c4lRock5",
-                        redirectUrl: "https://shop-team3.html"  // Redirect for Team3
-                    }
+                    "admin": { password: "badmin", redirectUrl: "admin-panel.html"},
+                    "Team1": { password: "M3dic1neM@n", redirectUrl: "shop-team1.html" },
+                    "Team2": { password: "Pa7ientR0om", redirectUrl: "shop-team2.html" },
+                    "Team3": { password: "UAmed1c4lRock5", redirectUrl: "shop-team3.html" }
+
                 };
 
                 if (validTeams[teamName] && validTeams[teamName].password === password) {
-                    window.location.href = validTeams[teamName].redirectUrl; // Redirect based on team
+                    window.location.href = validTeams[teamName].redirectUrl;
                 } else {
                     errorMessage.textContent = "Invalid team name or password.";
                 }
